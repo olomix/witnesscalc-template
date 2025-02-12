@@ -53,30 +53,12 @@ jobs:
           mkdir build_witnesscalc_ios && cd build_witnesscalc_ios
           cmake .. -GXcode -DTARGET_PLATFORM=IOS -DCMAKE_INSTALL_PREFIX=../package_ios
           xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS' -configuration Release -scheme witnesscalc_authV2Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS' -configuration Release -scheme witnesscalc_credentialAtomicQueryMTPV2OnChainStatic
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS' -configuration Release -scheme witnesscalc_credentialAtomicQueryMTPV2Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS' -configuration Release -scheme witnesscalc_credentialAtomicQuerySigV2OnChainStatic
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS' -configuration Release -scheme witnesscalc_credentialAtomicQuerySigV2Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS' -configuration Release -scheme witnesscalc_credentialAtomicQueryV3Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS' -configuration Release -scheme witnesscalc_credentialAtomicQueryV3OnChainStatic
           mkdir -p ../package_ios/lib
           cp ../depends/gmp/package_ios_arm64/lib/libgmp.a ../package_ios/lib
           cp \
             ./src/Release-iphoneos/libfr.a \
             ./src/Release-iphoneos/libwitnesscalc_authV2.a \
-            ./src/Release-iphoneos/libwitnesscalc_credentialAtomicQueryMTPV2.a \
-            ./src/Release-iphoneos/libwitnesscalc_credentialAtomicQueryMTPV2OnChain.a \
-            ./src/Release-iphoneos/libwitnesscalc_credentialAtomicQuerySigV2.a \
-            ./src/Release-iphoneos/libwitnesscalc_credentialAtomicQuerySigV2OnChain.a \
-            ./src/Release-iphoneos/libwitnesscalc_credentialAtomicQueryV3.a \
-            ./src/Release-iphoneos/libwitnesscalc_credentialAtomicQueryV3OnChain.a \
             ../src/authV2.dat \
-            ../src/credentialAtomicQueryMTPV2.dat \
-            ../src/credentialAtomicQueryMTPV2OnChain.dat \
-            ../src/credentialAtomicQuerySigV2.dat \
-            ../src/credentialAtomicQuerySigV2OnChain.dat \
-            ../src/credentialAtomicQueryV3.dat \
-            ../src/credentialAtomicQueryV3OnChain.dat \
             ../package_ios/lib
           cp -r ../package/include ../package_ios/include
           cd ../
@@ -86,30 +68,12 @@ jobs:
           mkdir build_prover_ios_simulator && cd build_prover_ios_simulator
           cmake .. -GXcode -DTARGET_PLATFORM=IOS -DCMAKE_INSTALL_PREFIX=../package_ios_simulator -DUSE_ASM=NO
           xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS Simulator' -configuration Debug -scheme witnesscalc_authV2Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS Simulator' -configuration Debug -scheme witnesscalc_credentialAtomicQueryMTPV2OnChainStatic
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS Simulator' -configuration Debug -scheme witnesscalc_credentialAtomicQueryMTPV2Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS Simulator' -configuration Debug -scheme witnesscalc_credentialAtomicQuerySigV2OnChainStatic
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS Simulator' -configuration Debug -scheme witnesscalc_credentialAtomicQuerySigV2Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS Simulator' -configuration Debug -scheme witnesscalc_credentialAtomicQueryV3Static
-          xcodebuild -project witnesscalc.xcodeproj -destination 'generic/platform=iOS Simulator' -configuration Debug -scheme witnesscalc_credentialAtomicQueryV3OnChainStatic
           mkdir -p ../package_ios_simulator/lib
           cp ../depends/gmp/package_iphone_simulator/lib/libgmp.a src/Debug-iphonesimulator
           cp \
             ./src/Debug-iphonesimulator/libfr.a \
             ./src/Debug-iphonesimulator/libwitnesscalc_authV2.a \
-            ./src/Debug-iphonesimulator/libwitnesscalc_credentialAtomicQueryMTPV2.a \
-            ./src/Debug-iphonesimulator/libwitnesscalc_credentialAtomicQueryMTPV2OnChain.a \
-            ./src/Debug-iphonesimulator/libwitnesscalc_credentialAtomicQuerySigV2.a \
-            ./src/Debug-iphonesimulator/libwitnesscalc_credentialAtomicQuerySigV2OnChain.a \
-            ./src/Debug-iphonesimulator/libwitnesscalc_credentialAtomicQueryV3.a \
-            ./src/Debug-iphonesimulator/libwitnesscalc_credentialAtomicQueryV3OnChain.a \
             ../src/authV2.dat \
-            ../src/credentialAtomicQueryMTPV2.dat \
-            ../src/credentialAtomicQueryMTPV2OnChain.dat \
-            ../src/credentialAtomicQuerySigV2.dat \
-            ../src/credentialAtomicQuerySigV2OnChain.dat \
-            ../src/credentialAtomicQueryV3.dat \
-            ../src/credentialAtomicQueryV3OnChain.dat \
             ../package_ios_simulator/lib
           cp -r ../package/include ../package_ios_simulator/include
           cd ../
