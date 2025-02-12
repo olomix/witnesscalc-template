@@ -55,9 +55,6 @@ install(TARGETS
     credentialAtomicQueryV3OnChain
     witnesscalc_credentialAtomicQueryV3OnChain
     witnesscalc_credentialAtomicQueryV3OnChainStatic
-    linkedMultiQuery10
-    witnesscalc_linkedMultiQuery10
-    witnesscalc_linkedMultiQuery10Static
     fr
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
     BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/app
@@ -74,7 +71,6 @@ install(FILES
     src/credentialAtomicQueryMTPV2OnChain.dat
     src/credentialAtomicQueryV3.dat
     src/credentialAtomicQueryV3OnChain.dat
-    src/linkedMultiQuery10.dat
     DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 install(FILES
@@ -86,5 +82,4 @@ install(FILES
     src/witnesscalc_credentialAtomicQueryMTPV2OnChain.h
     src/witnesscalc_credentialAtomicQueryV3.h
     src/witnesscalc_credentialAtomicQueryV3OnChain.h
-    src/witnesscalc_linkedMultiQuery10.h
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
