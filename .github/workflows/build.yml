@@ -44,7 +44,7 @@ jobs:
       - name: build macOS
         run: |
           mkdir build_witnesscalc && cd build_witnesscalc
-          cmake .. -DTARGET_PLATFORM=macos_arm64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../package
+          cmake .. -DTARGET_PLATFORM=macos_arm64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../package -DCIRCUIT_FILE=../testdata/authV2.cpp
           make -j8
           make install
           cd ../
