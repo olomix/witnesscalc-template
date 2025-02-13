@@ -21,9 +21,6 @@ void writeBinWitness(char *witnessBuffer, unsigned long witnessSize, std::string
     fclose(write_ptr);
 }
 
-static const size_t WitnessBufferSize = 8*1024*1024;
-static char WitnessBuffer[WitnessBufferSize];
-
 int main (int argc, char *argv[]) {
 
     std::string cl(argv[0]);
@@ -38,14 +35,16 @@ int main (int argc, char *argv[]) {
         std::string jsonfile(argv[1]);
         std::string wtnsFileName(argv[2]);
 
-        size_t witnessSize = sizeof(WitnessBuffer);
+        size_t witnessSize = CIRCUIT_NAME::getBinWitnessSize();
+        std::vector<char> witnessBuffer(witnessSize);
+
         char   errorMessage[256];
 
         FileMapLoader jsonLoader(jsonfile);
 
         int error = CIRCUIT_NAME::witnesscalc_from_dat_file(datfile.c_str(),
                                 jsonLoader.buffer, jsonLoader.size,
-                                WitnessBuffer, &witnessSize,
+                                witnessBuffer.data(), &witnessSize,
                                 errorMessage, sizeof(errorMessage));
 
         if (error == WITNESSCALC_ERROR_SHORT_BUFFER) {
@@ -60,7 +59,7 @@ int main (int argc, char *argv[]) {
             return EXIT_FAILURE;
         }
 
-        writeBinWitness(WitnessBuffer, witnessSize, wtnsFileName);
+        writeBinWitness(witnessBuffer.data(), witnessSize, wtnsFileName);
 
     } catch (std::exception* e) {
         std::cerr << e->what() << '\n';

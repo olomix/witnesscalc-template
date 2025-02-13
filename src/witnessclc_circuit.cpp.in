@@ -1,4 +1,4 @@
-#include "witnesscalc_${CIRCUIT_NAME}.h"
+#include "witnesscalc_${CIRCUIT_FILE_NAME}.h"
 #include "witnesscalc.h"
 
 int

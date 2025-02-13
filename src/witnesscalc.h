@@ -39,6 +39,13 @@ witnesscalc_from_dat_file(
     char       *wtns_buffer,     unsigned long *wtns_size,
     char       *error_msg,       unsigned long  error_msg_maxsize);
 
+
+/**
+ * Return the required buffer size for the witness.
+ */
+unsigned long
+getBinWitnessSize();
+
 } // namespace
 
 #endif // WITNESSCALC_H

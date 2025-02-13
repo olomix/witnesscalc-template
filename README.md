@@ -16,6 +16,15 @@ git submodule init
 git submodule update
 ```
 
+### Compile witnesscalc on macOS
+
+```shell
+./build_gmp.sh macos_arm64
+mkdir build_witnesscalc && cd build_witnesscalc
+cmake .. -DTARGET_PLATFORM=macos_arm64 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../package -DCIRCUIT_FILE=<path_to_circuit.cpp>
+make -j 8 && make install
+```
+
 ### Compile witnesscalc for x86_64 host machine
 
 ```sh

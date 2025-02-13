@@ -63,7 +63,7 @@ set(LIB_SOURCES
     witnesscalc.cpp
 )
 
-set(CIRCUIT_PATCHED_FILE ${CMAKE_BINARY_DIR}/generated/${CIRCUIT_NAME}.cpp)
+set(CIRCUIT_PATCHED_FILE ${CMAKE_BINARY_DIR}/generated/${CIRCUIT_FILE_NAME}.cpp)
 add_custom_command(
         OUTPUT ${CIRCUIT_PATCHED_FILE}
         COMMAND bash ${CMAKE_SOURCE_DIR}/patch_cpp.sh ${CIRCUIT_FILE} > ${CIRCUIT_PATCHED_FILE}
@@ -74,27 +74,27 @@ add_custom_command(
 
 configure_file(
         ${CMAKE_SOURCE_DIR}/src/witnesscalc_circuit.h.in
-        ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.h
+        ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_FILE_NAME}.h
 )
 
 configure_file(
         ${CMAKE_SOURCE_DIR}/src/witnessclc_circuit.cpp.in
-        ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.cpp
+        ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_FILE_NAME}.cpp
 )
 
 set(CIRCUIT_SOURCES ${LIB_SOURCES}
     ${CIRCUIT_PATCHED_FILE}
-    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.h
-    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.cpp
+    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_FILE_NAME}.h
+    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_FILE_NAME}.cpp
 )
 
-add_library(witnesscalc_${CIRCUIT_NAME} SHARED ${CIRCUIT_SOURCES})
-add_library(witnesscalc_${CIRCUIT_NAME}Static STATIC ${CIRCUIT_SOURCES})
-set_target_properties(witnesscalc_${CIRCUIT_NAME}Static PROPERTIES OUTPUT_NAME witnesscalc_${CIRCUIT_NAME})
+add_library(witnesscalc_${CIRCUIT_FILE_NAME} SHARED ${CIRCUIT_SOURCES})
+add_library(witnesscalc_${CIRCUIT_FILE_NAME}Static STATIC ${CIRCUIT_SOURCES})
+set_target_properties(witnesscalc_${CIRCUIT_FILE_NAME}Static PROPERTIES OUTPUT_NAME witnesscalc_${CIRCUIT_FILE_NAME})
 
-add_executable(${CIRCUIT_NAME} main.cpp)
-target_link_libraries(${CIRCUIT_NAME} witnesscalc_${CIRCUIT_NAME}Static)
+add_executable(${CIRCUIT_FILE_NAME} main.cpp)
+target_link_libraries(${CIRCUIT_FILE_NAME} witnesscalc_${CIRCUIT_FILE_NAME}Static)
 
-target_compile_definitions(witnesscalc_${CIRCUIT_NAME} PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
-target_compile_definitions(witnesscalc_${CIRCUIT_NAME}Static PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
-target_compile_definitions(${CIRCUIT_NAME} PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
+target_compile_definitions(witnesscalc_${CIRCUIT_FILE_NAME} PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
+target_compile_definitions(witnesscalc_${CIRCUIT_FILE_NAME}Static PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
+target_compile_definitions(${CIRCUIT_FILE_NAME} PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})

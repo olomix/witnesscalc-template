@@ -21,13 +21,31 @@ if(NOT EXISTS ${CIRCUIT_FILE})
 endif()
 message(STATUS "Circuit .cpp file is set to ${CIRCUIT_FILE}")
 
+function(make_valid_cpp_identifier INPUT_STRING OUTPUT_VARIABLE)
+    set(IDENTIFIER "${INPUT_STRING}")
+
+    # Replace invalid characters with _
+    string(REGEX REPLACE "[^a-zA-Z0-9_]" "_" IDENTIFIER "${IDENTIFIER}")
+
+    # Ensure it does not start with a digit (prefix with an underscore if needed)
+    string(REGEX MATCH "^[0-9]" STARTS_WITH_DIGIT "${IDENTIFIER}")
+    if(STARTS_WITH_DIGIT)
+        set(IDENTIFIER "_${IDENTIFIER}")
+    endif()
+
+    # Return the valid identifier
+    set(${OUTPUT_VARIABLE} "${IDENTIFIER}" PARENT_SCOPE)
+endfunction()
+
 get_filename_component(CIRCUIT_NAME ${CIRCUIT_FILE} NAME_WLE)
+make_valid_cpp_identifier("${CIRCUIT_NAME}" CIRCUIT_NAME)
 message(STATUS "Circuit name: ${CIRCUIT_NAME}")
 string(TOUPPER "${CIRCUIT_NAME}" CIRCUIT_NAME_UPPER)
 
 # Determine the .dat file path
+get_filename_component(CIRCUIT_FILE_NAME ${CIRCUIT_FILE} NAME_WLE)
 get_filename_component(CIRCUIT_FILE_DIR ${CIRCUIT_FILE} DIRECTORY)
-set(CIRCUIT_DAT "${CIRCUIT_FILE_DIR}/${CIRCUIT_NAME}.dat")
+set(CIRCUIT_DAT "${CIRCUIT_FILE_DIR}/${CIRCUIT_FILE_NAME}.dat")
 if(NOT EXISTS ${CIRCUIT_DAT})
     message(FATAL_ERROR "Dat file does not exist: ${CIRCUIT_DAT}")
 endif()
@@ -60,9 +78,9 @@ add_subdirectory(src)
 install(TARGETS
     tests
     test_platform
-    ${CIRCUIT_NAME}
-    witnesscalc_${CIRCUIT_NAME}
-    witnesscalc_${CIRCUIT_NAME}Static
+    ${CIRCUIT_FILE_NAME}
+    witnesscalc_${CIRCUIT_FILE_NAME}
+    witnesscalc_${CIRCUIT_FILE_NAME}Static
     fr
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
     BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/app
@@ -77,5 +95,5 @@ install(FILES
 
 install(FILES
     src/witnesscalc.h
-    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.h
+    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_FILE_NAME}.h
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
