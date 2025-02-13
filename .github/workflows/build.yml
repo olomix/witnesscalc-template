@@ -79,13 +79,17 @@ jobs:
 #          cp -r ../package/include ../package_ios_simulator/include
 #          cd ../
           
-      - name: test witness generation
-        run: |
-          npm install -g snarkjs
-          mkdir temp
-          package/bin/authV2 testdata/authV2_input.json temp/authV2_witness.wtns
-          snarkjs wchk testdata/authV2.r1cs temp/authV2_witness.wtns
-#          ./run_tests.sh
+      - name: install snarkjs
+        run: npm install -g snarkjs
+
+      - name: make temp dir
+        run: mkdir temp
+
+      - name: generate witness
+        run: package/bin/authV2 testdata/authV2_input.json temp/authV2_witness.wtns
+
+      - name: validate witness
+        run: snarkjs wchk testdata/authV2.r1cs temp/authV2_witness.wtns
 
 #  build-linux:
 #    runs-on: ubuntu-22.04
