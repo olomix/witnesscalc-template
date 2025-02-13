@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <vector>
 #include "witnesscalc.h"
 #include "filemaploader.hpp"
 
