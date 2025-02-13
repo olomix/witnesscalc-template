@@ -94,6 +94,5 @@ install(FILES
     DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 install(FILES
-    src/witnesscalc.h
     ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_FILE_NAME}.h
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
