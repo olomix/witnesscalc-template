@@ -1,10 +1,37 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.28)
 
 include(cmake/platform.cmake)
 
 set(USE_ASM ON CACHE BOOL "Use asm implementation for Fr and Fq")
 
 project(witnesscalc LANGUAGES CXX ASM)
+
+if(NOT DEFINED CIRCUIT_FILE)
+    message(FATAL_ERROR "CIRCUIT_FILE is required but not provided!")
+endif()
+file(REAL_PATH ${CIRCUIT_FILE} CIRCUIT_FILE EXPAND_TILDE)
+
+get_filename_component(CIRCUIT_FILE_EXT ${CIRCUIT_FILE} LAST_EXT)
+if(NOT CIRCUIT_FILE_EXT STREQUAL ".cpp")
+    message(FATAL_ERROR "CIRCUIT_FILE should have .cpp extension.")
+endif()
+
+if(NOT EXISTS ${CIRCUIT_FILE})
+    message(FATAL_ERROR "File does not exist: ${CIRCUIT_FILE}")
+endif()
+message(STATUS "Circuit .cpp file is set to ${CIRCUIT_FILE}")
+
+get_filename_component(CIRCUIT_NAME ${CIRCUIT_FILE} NAME_WLE)
+message(STATUS "Circuit name: ${CIRCUIT_NAME}")
+string(TOUPPER "${CIRCUIT_NAME}" CIRCUIT_NAME_UPPER)
+
+# Determine the .dat file path
+get_filename_component(CIRCUIT_FILE_DIR ${CIRCUIT_FILE} DIRECTORY)
+set(CIRCUIT_DAT "${CIRCUIT_FILE_DIR}/${CIRCUIT_NAME}.dat")
+if(NOT EXISTS ${CIRCUIT_DAT})
+    message(FATAL_ERROR "Dat file does not exist: ${CIRCUIT_DAT}")
+endif()
+message(STATUS "Dat file name: ${CIRCUIT_DAT}")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -30,13 +57,12 @@ include_directories(BEFORE ${GMP_INCLUDE_DIR})
 
 add_subdirectory(src)
 
-
 install(TARGETS
     tests
     test_platform
-    authV2
-    witnesscalc_authV2
-    witnesscalc_authV2Static
+    ${CIRCUIT_NAME}
+    witnesscalc_${CIRCUIT_NAME}
+    witnesscalc_${CIRCUIT_NAME}Static
     fr
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
     BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/app
@@ -46,10 +72,10 @@ install(FILES "${GMP_LIB_DIR}/${GMP_LIB_FILE}"
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
 install(FILES
-    src/authV2.dat
+    ${CIRCUIT_DAT}
     DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 
 install(FILES
     src/witnesscalc.h
-    src/witnesscalc_authV2.h
+    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.h
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include)

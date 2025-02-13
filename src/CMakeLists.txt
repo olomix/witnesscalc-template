@@ -54,31 +54,47 @@ set_target_properties(fr PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 link_libraries(fr)
 
-
 add_executable(tests tests.cpp)
 add_executable(test_platform test_platform.cpp)
-
 
 set(LIB_SOURCES
     calcwit.cpp
     witnesscalc.h
     witnesscalc.cpp
-    )
+)
 
-# authV2
-set(AUTHV2_SOURCES ${LIB_SOURCES}
-    authV2.cpp
-    witnesscalc_authV2.h
-    witnesscalc_authV2.cpp
-    )
+set(CIRCUIT_PATCHED_FILE ${CMAKE_BINARY_DIR}/generated/${CIRCUIT_NAME}.cpp)
+add_custom_command(
+        OUTPUT ${CIRCUIT_PATCHED_FILE}
+        COMMAND bash ${CMAKE_SOURCE_DIR}/patch_cpp.sh ${CIRCUIT_FILE} > ${CIRCUIT_PATCHED_FILE}
+        DEPENDS ${CMAKE_SOURCE_DIR}/patch_cpp.sh ${CIRCUIT_FILE}
+        COMMENT "Generating ${CIRCUIT_PATCHED_FILE}"
+        VERBATIM
+)
 
-add_library(witnesscalc_authV2 SHARED ${AUTHV2_SOURCES})
-add_library(witnesscalc_authV2Static STATIC ${AUTHV2_SOURCES})
-set_target_properties(witnesscalc_authV2Static PROPERTIES OUTPUT_NAME witnesscalc_authV2)
+configure_file(
+        ${CMAKE_SOURCE_DIR}/src/witnesscalc_circuit.h.in
+        ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.h
+)
 
-add_executable(authV2 main.cpp)
-target_link_libraries(authV2 witnesscalc_authV2Static)
+configure_file(
+        ${CMAKE_SOURCE_DIR}/src/witnessclc_circuit.cpp.in
+        ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.cpp
+)
 
-target_compile_definitions(witnesscalc_authV2 PUBLIC CIRCUIT_NAME=authV2)
-target_compile_definitions(witnesscalc_authV2Static PUBLIC CIRCUIT_NAME=authV2)
-target_compile_definitions(authV2 PUBLIC CIRCUIT_NAME=authV2)
+set(CIRCUIT_SOURCES ${LIB_SOURCES}
+    ${CIRCUIT_PATCHED_FILE}
+    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.h
+    ${CMAKE_BINARY_DIR}/generated/witnesscalc_${CIRCUIT_NAME}.cpp
+)
+
+add_library(witnesscalc_${CIRCUIT_NAME} SHARED ${CIRCUIT_SOURCES})
+add_library(witnesscalc_${CIRCUIT_NAME}Static STATIC ${CIRCUIT_SOURCES})
+set_target_properties(witnesscalc_${CIRCUIT_NAME}Static PROPERTIES OUTPUT_NAME witnesscalc_${CIRCUIT_NAME})
+
+add_executable(${CIRCUIT_NAME} main.cpp)
+target_link_libraries(${CIRCUIT_NAME} witnesscalc_${CIRCUIT_NAME}Static)
+
+target_compile_definitions(witnesscalc_${CIRCUIT_NAME} PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
+target_compile_definitions(witnesscalc_${CIRCUIT_NAME}Static PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
+target_compile_definitions(${CIRCUIT_NAME} PUBLIC CIRCUIT_NAME=${CIRCUIT_NAME})
