@@ -44,7 +44,7 @@ witnesscalc_from_dat_file(
  * Return the required buffer size for the witness.
  */
 unsigned long
-getBinWitnessSize();
+get_bin_witness_size();
 
 } // namespace
 

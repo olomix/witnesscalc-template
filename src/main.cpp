@@ -35,7 +35,7 @@ int main (int argc, char *argv[]) {
         std::string jsonfile(argv[1]);
         std::string wtnsFileName(argv[2]);
 
-        size_t witnessSize = CIRCUIT_NAME::getBinWitnessSize();
+        size_t witnessSize = CIRCUIT_NAME::get_bin_witness_size();
         std::vector<char> witnessBuffer(witnessSize);
 
         char   errorMessage[256];

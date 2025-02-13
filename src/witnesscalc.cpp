@@ -190,7 +190,7 @@ void loadJson(Circom_CalcWit *ctx, const char *json_buffer, unsigned long buffer
   }
 }
 
-unsigned long getBinWitnessSize() {
+unsigned long get_bin_witness_size() {
 
      uint Nwtns = get_size_of_witness();
 
@@ -268,7 +268,7 @@ int witnesscalc(
     char       *wtns_buffer,     unsigned long *wtns_size,
     char       *error_msg,       unsigned long  error_msg_maxsize)
 {
-    unsigned long witnessSize = getBinWitnessSize();
+    unsigned long witnessSize = get_bin_witness_size();
 
     if (*wtns_size < witnessSize) {
         *wtns_size = witnessSize;
