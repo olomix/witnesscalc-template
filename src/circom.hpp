@@ -22,15 +22,17 @@ struct __attribute__((__packed__)) HashSignalInfo {
     u64 signalsize; 
 };
 
-struct IODef { 
+struct IOFieldDef {
     u32 offset;
     u32 len;
     u32 *lengths = nullptr;
+    u32 size;
+    u32 busId;
 };
 
-struct IODefPair { 
+struct IOFieldDefPair {
     u32 len;
-    IODef* defs = nullptr;
+    IOFieldDef* defs = nullptr;
 };
 
 struct Circom_Circuit {
@@ -38,7 +40,8 @@ struct Circom_Circuit {
   HashSignalInfo* InputHashMap = nullptr;
   u64* witness2SignalList = nullptr;
   FrElement* circuitConstants = nullptr;  
-  std::map<u32,IODefPair> templateInsId2IOSignalInfo;
+  std::map<u32,IOFieldDefPair> templateInsId2IOSignalInfo;
+  IOFieldDefPair* busInsId2FieldInfo = nullptr;
 
   ~Circom_Circuit() {
 
@@ -106,6 +109,7 @@ uint get_size_of_input_hashmap();
 uint get_size_of_witness();
 uint get_size_of_constants();
 uint get_size_of_io_map();
+uint get_size_of_bus_field_map();
 
 } //namespace
 #endif  // __CIRCOM_H

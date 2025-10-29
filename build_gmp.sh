@@ -25,20 +25,20 @@ usage()
 
 get_gmp()
 {
-    GMP_NAME=gmp-6.2.1
+    GMP_NAME=gmp-6.3.0
     GMP_ARCHIVE=${GMP_NAME}.tar.xz
     GMP_URL=https://ftp.gnu.org/gnu/gmp/${GMP_ARCHIVE}
 
     if [ ! -f ${GMP_ARCHIVE} ]; then
 
-        $fetch_cmd ${GMP_URL}
+        $fetch_cmd ${GMP_URL} || exit 1
     fi
 
 
     if [ ! -d gmp ]; then
 
-        tar -xvf ${GMP_ARCHIVE}
-        mv ${GMP_NAME} gmp
+        tar -xvf ${GMP_ARCHIVE} || exit 1
+        mv ${GMP_NAME} gmp || exit 1
     fi
 }
 
@@ -49,7 +49,7 @@ build_aarch64()
 
     if [ -d "$PACKAGE_DIR" ]; then
         echo "aarch64 package is built already. See $PACKAGE_DIR"
-        return 1
+        return 0
     fi
 
 
@@ -59,13 +59,13 @@ build_aarch64()
 
     rm -rf "$BUILD_DIR"
     mkdir "$BUILD_DIR"
-    cd "$BUILD_DIR"
+    cd "$BUILD_DIR" || exit 1
 
-    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft &&
-    make -j${NPROC} &&
-    make install
+    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft || exit 1
+    make -j${NPROC} || exit 1
+    make install || exit 1
 
-    cd ..
+    cd .. || exit 1
 }
 
 build_host()
@@ -75,18 +75,18 @@ build_host()
 
     if [ -d "$PACKAGE_DIR" ]; then
         echo "Host package is built already. See $PACKAGE_DIR"
-        return 1
+        return 0
     fi
 
     rm -rf "$BUILD_DIR"
     mkdir "$BUILD_DIR"
-    cd "$BUILD_DIR"
+    cd "$BUILD_DIR" || exit 1
 
-    ../configure --prefix="$PACKAGE_DIR" --with-pic --disable-fft &&
-    make -j${NPROC} &&
-    make install
+    ../configure --prefix="$PACKAGE_DIR" --with-pic --disable-fft || exit 1
+    make -j${NPROC} || exit 1
+    make install || exit 1
 
-    cd ..
+    cd .. || exit 1
 }
 
 build_host_noasm()
@@ -96,18 +96,18 @@ build_host_noasm()
 
     if [ -d "$PACKAGE_DIR" ]; then
         echo "Host package is built already. See $PACKAGE_DIR"
-        return 1
+        return 0
     fi
 
     rm -rf "$BUILD_DIR"
     mkdir "$BUILD_DIR"
-    cd "$BUILD_DIR"
+    cd "$BUILD_DIR" || exit 1
 
-    ../configure --prefix="$PACKAGE_DIR" --with-pic --disable-fft --disable-assembly &&
-    make -j${NPROC} &&
-    make install
+    ../configure --prefix="$PACKAGE_DIR" --with-pic --disable-fft --disable-assembly || exit 1
+    make -j${NPROC} || exit 1
+    make install || exit 1
 
-    cd ..
+    cd .. || exit 1
 }
 
 build_android()
@@ -117,7 +117,7 @@ build_android()
 
     if [ -d "$PACKAGE_DIR" ]; then
         echo "Android package is built already. See $PACKAGE_DIR"
-        return 1
+        return 0
     fi
 
     if [ -z "$ANDROID_NDK" ]; then
@@ -125,7 +125,7 @@ build_android()
         echo "ERROR: ANDROID_NDK environment variable is not set."
         echo "       It must be an absolute path to the root directory of Android NDK."
         echo "       For instance /home/test/Android/Sdk/ndk/23.1.7779620"
-        return 1
+        exit 1
     fi
 
     if [ "$(uname)" == "Darwin" ]; then
@@ -150,13 +150,13 @@ build_android()
 
     rm -rf "$BUILD_DIR"
     mkdir "$BUILD_DIR"
-    cd "$BUILD_DIR"
+    cd "$BUILD_DIR" || exit 1
 
-    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft &&
-    make -j${NPROC} &&
-    make install
+    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft || exit 1
+    make -j${NPROC} || exit 1
+    make install || exit 1
 
-    cd ..
+    cd .. || exit 1
 }
 
 build_android_x86_64()
@@ -166,7 +166,7 @@ build_android_x86_64()
 
     if [ -d "$PACKAGE_DIR" ]; then
         echo "Android package is built already. See $PACKAGE_DIR"
-        return 1
+        return 0
     fi
 
     if [ -z "$ANDROID_NDK" ]; then
@@ -174,7 +174,7 @@ build_android_x86_64()
         echo "ERROR: ANDROID_NDK environment variable is not set."
         echo "       It must be an absolute path to the root directory of Android NDK."
         echo "       For instance /home/test/Android/Sdk/ndk/23.1.7779620"
-        return 1
+        exit 1
     fi
 
     if [ "$(uname)" == "Darwin" ]; then
@@ -199,13 +199,13 @@ build_android_x86_64()
 
     rm -rf "$BUILD_DIR"
     mkdir "$BUILD_DIR"
-    cd "$BUILD_DIR"
+    cd "$BUILD_DIR" || exit 1
 
-    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft &&
-    make -j${NPROC} &&
-    make install
+    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft || exit 1
+    make -j${NPROC} || exit 1
+    make install || exit 1
 
-    cd ..
+    cd .. || exit 1
 }
 
 build_ios()
@@ -215,7 +215,7 @@ build_ios()
 
     if [ -d "$PACKAGE_DIR" ]; then
         echo "iOS package is built already. See $PACKAGE_DIR"
-        return 1
+        return 0
     fi
 
     export SDK="iphoneos"
@@ -240,13 +240,13 @@ build_ios()
 
     rm -rf "$BUILD_DIR"
     mkdir "$BUILD_DIR"
-    cd "$BUILD_DIR"
+    cd "$BUILD_DIR" || exit 1
 
-    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft --disable-assembly &&
-    make -j${NPROC} &&
-    make install
+    ../configure --host $TARGET --prefix="$PACKAGE_DIR" --with-pic --disable-fft --disable-assembly || exit 1
+    make -j${NPROC} || exit 1
+    make install || exit 1
 
-    cd ..
+    cd .. || exit 1
 }
 
 build_ios_simulator()
@@ -266,7 +266,7 @@ build_ios_simulator()
 				echo "Incorrect iPhone Simulator arch"
 				exit 1
 		esac
-		
+
 		BUILD_DIR="build_iphone_simulator_${ARCH}"
 		PACKAGE_DIR="$GMP_DIR/package_iphone_simulator_${ARCH}"
 		libs+=("${PACKAGE_DIR}/lib/libgmp.a")
@@ -278,21 +278,22 @@ build_ios_simulator()
 
 		rm -rf "$BUILD_DIR"
 		mkdir "$BUILD_DIR"
-		cd "$BUILD_DIR"
+		cd "$BUILD_DIR" || exit 1
 
 		../configure --prefix="${PACKAGE_DIR}" \
 					 CC="$(xcrun --sdk iphonesimulator --find clang)" \
 					 CFLAGS="-O3 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) ${ARCH_FLAGS} -fvisibility=hidden -mios-simulator-version-min=8.0" \
 					 LDFLAGS="" \
-					 --host ${ARCH}-apple-darwin --disable-assembly --enable-static --disable-shared --with-pic &&
-			make -j${NPROC} &&
-			make install
-		
-		cd ..
+					 --host ${ARCH}-apple-darwin --disable-assembly --enable-static --disable-shared --with-pic || exit 1
+
+		make -j${NPROC} || exit 1
+		make install || exit 1
+
+		cd .. || exit 1
 	done
 
 	mkdir -p "${GMP_DIR}/package_iphone_simulator/lib"
-	lipo "${libs[@]}" -create -output "${GMP_DIR}/package_iphone_simulator/lib/libgmp.a"
+	lipo "${libs[@]}" -create -output "${GMP_DIR}/package_iphone_simulator/lib/libgmp.a" || exit 1
 	echo "Wrote universal fat library for iPhone Simulator arm64/x86_64 to ${GMP_DIR}/package_iphone_simulator/lib/libgmp.a"
 }
 
@@ -315,36 +316,40 @@ build_macos_arch()
   PACKAGE_DIR="$GMP_DIR/package_macos_${ARCH}"
   if [ -d "$PACKAGE_DIR" ]; then
     echo "macOS ${ARCH} package is built already. See $PACKAGE_DIR. Skip building this ARCH."
-    return
+    return 0
   fi
   rm -rf "$BUILD_DIR"
   mkdir "$BUILD_DIR"
-  cd "$BUILD_DIR"
+  cd "$BUILD_DIR" || exit 1
+
   ../configure --prefix="${PACKAGE_DIR}" \
          CC="$(xcrun --sdk macosx --find clang)" \
+         CPP_FOR_BUILD="$(xcrun --sdk macosx --find clang) -E" \
          CFLAGS="-O3 -isysroot $(xcrun --sdk macosx --show-sdk-path) ${ARCH_FLAGS} -fvisibility=hidden -mmacos-version-min=14.0" \
          LDFLAGS="" \
-         --host "${ARCH}-apple-darwin" --disable-assembly --enable-static --disable-shared --with-pic &&
-    make -j${NPROC} &&
-    make install
-  cd ..
+         --host "${ARCH}-apple-darwin" --enable-static --disable-shared --with-pic || exit 1
+
+  make -j${NPROC} || exit 1
+  make install || exit 1
+
+  cd .. || exit 1
 }
 
 build_macos_fat()
 {
   echo "Building for macOS arm64"
-  build_macos_arch "arm64"
+  build_macos_arch "arm64" || exit 1
   echo "Building for macOS x86_64"
-  build_macos_arch "x86_64"
+  build_macos_arch "x86_64" || exit 1
 
   gmp_lib_arm64="$GMP_DIR/package_macos_arm64/lib/libgmp.a"
   gmp_lib_x86_64="$GMP_DIR/package_macos_x86_64/lib/libgmp.a"
   gmp_lib_fat="$GMP_DIR/package_macos/lib/libgmp.a"
 
-	mkdir -p "${GMP_DIR}/package_macos/lib"
-	lipo "${gmp_lib_arm64}" "${gmp_lib_x86_64}" -create -output "${gmp_lib_fat}"
-	mkdir -p "${GMP_DIR}/package_macos/include"
-	cp  "${GMP_DIR}/package_macos_arm64/include/gmp.h" "${GMP_DIR}/package_macos/include/"
+	mkdir -p "${GMP_DIR}/package_macos/lib" || exit 1
+	lipo "${gmp_lib_arm64}" "${gmp_lib_x86_64}" -create -output "${gmp_lib_fat}" || exit 1
+	mkdir -p "${GMP_DIR}/package_macos/include" || exit 1
+	cp  "${GMP_DIR}/package_macos_arm64/include/gmp.h" "${GMP_DIR}/package_macos/include/" || exit 1
 	echo "Wrote universal fat library for macOS arm64/x86_64 to ${GMP_DIR}/package_macos/lib/libgmp.a"
 }
 
